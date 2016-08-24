@@ -22,19 +22,19 @@ read_tse_meta <- function(filename) {
 
 ##Read box information from a formatted TSE file
 ##returns a data frame containing box information
-read.tse.boxes <- function(filename, n.boxes) {
-  col.classes <- c("integer", "integer",
+read_tse_boxes <- function(filename, n_boxes) {
+  col_classes <- c("integer", "integer",
                    "numeric", "character",
                    "character", "character",
                    "logical")
 
-  tse.boxes <- read.csv(filename, skip = 2,
-                        nrows = n.boxes,
-                        colClasses = col.classes,
+  tse_boxes <- read.csv(filename, skip = 2,
+                        nrows = n_boxes,
+                        colClasses = col_classes,
                         na.strings = " ")
   ##TSE data files come with an extra column after box information
   ##This trims that null column
-  tse.boxes <- subset(tse.boxes, select = Box:Text3)
+  tse_boxes <- subset(tse_boxes, select = Box:Text3)
 }
 
 ##Read TSE data from a formatted TSE file
