@@ -49,6 +49,9 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19) {
   tse_data <- melt(tse_data,
                    id.vars = c(1, 2),
                    variable.name = "Time")
+  ##Convert box variable to numeric
+  tse_data <- mutate(tse_data, Box = as.character(Box))
+  tse_data <- mutate(tse_data, Box = as.numeric(substring(Box, 4, nchar(Box))))
 
   ##Convert time variable into a string to prep for POSIXct conversion
   tse_data <- mutate(tse_data, Time = as.character(Time))
