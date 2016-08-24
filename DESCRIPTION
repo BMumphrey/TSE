@@ -1,11 +1,16 @@
 Package: TSE
 Type: Package
-Title: What the Package Does (Title Case)
+Title: TSE Data Viewer
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Brodie Mumphrey
+Maintainer: Who to complain to <brodiemumphrey@gmail.com>
+Description: Reads TSE metabolic chamber data into a tidy format that is
+    easier to manipulate and visualize.
+
 License: What license is it under?
 LazyData: TRUE
 URL: https://github.com/BMumphrey/TSE
 BugReports: https://github.com/BMumphrey/TSE/issues
+Imports:
+    dplyr,
+    reshape2
