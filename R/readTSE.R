@@ -74,12 +74,38 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19) {
                                          )
                          )
 
+  ##Add variable for experiment day number
+  ##Days officially begin at lights on, so first day will
+  ##generally not be a full 24h period
+  experiment_start <- min(unique_times$Parsed_Time)
+  offset <- time_since_lights_on(experiment_start, lights_on)
+  unique_times <- mutate(unique_times, Day = floor((as.numeric(Parsed_Time - experiment_start) + offset) / 86400))
+
   ##After conversion, merge back into original data table
   tse_data <- merge(tse_data, unique_times, by = "Time")
 
   ##Reorder columns and drop unparsed time
   ##Then sort based on Box, then Parameter, then Time
-  tse_data <- tse_data[, c(2, 3, 5, 4, 6)]
-  names(tse_data) <- c("Box", "Parameter", "Time", "Value", "Lights")
+  tse_data <- tse_data[, c(2, 3, 5, 4, 6, 7)]
+  names(tse_data) <- c("Box", "Parameter", "Time", "Value", "Lights", "Day")
   tse_data <- arrange(tse_data, Box, Parameter, Time)
+}
+
+##Returns time since lights on in seconds
+##Lights on is an int giving the hour that lights come on
+time_since_lights_on <- function(time, lights_on) {
+  lights_on_timestamp <- time
+
+  ##If the original time was after midnight but before lights on,
+  ##lights on took place on the previous day
+  if (hour(time) < lights_on){
+    lights_on_timestamp - 86400
+  }
+
+  ##Set timestamp equal to the hour corresponding to lights on
+  hour(lights_on_timestamp) <- lights_on
+  minute(lights_on_timestamp) <- 0
+  second(lights_on_timestamp) <- 0
+
+  as.numeric(difftime(time, lights_on_timestamp, units = "secs"))
 }
