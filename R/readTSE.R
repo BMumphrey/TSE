@@ -40,7 +40,8 @@ read_tse_boxes <- function(filename, n_boxes) {
 
 ##Read TSE data from a formatted TSE file
 ##Returns a data table adhering to tidy data principles
-read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19) {
+read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19, na.rm = TRUE) {
+
   ##read in raw TSE data
   ##TSE reports null values as "-"
   tse_data <- read.csv(filename, skip = 3 + n_boxes, na.strings = "-")
@@ -49,9 +50,16 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19) {
   tse_data <- melt(tse_data,
                    id.vars = c(1, 2),
                    variable.name = "Time")
-  ##Convert box variable to numeric
+
+  ##Convert box variable to numeric to support na.rm
   tse_data <- mutate(tse_data, Box = as.character(Box))
   tse_data <- mutate(tse_data, Box = as.numeric(substring(Box, 4, nchar(Box))))
+
+  ##Remove empty boxes as indicated by a weight of 1
+  if (na.rm == TRUE) {
+    tse_boxes <- read_tse_boxes(filename, n_boxes)
+    tse_data <- subset(tse_data, Box %in% subset(tse_boxes, Weight..g. != 1)$Box)
+  }
 
   ##Convert time variable into a string to prep for POSIXct conversion
   tse_data <- mutate(tse_data, Time = as.character(Time))
