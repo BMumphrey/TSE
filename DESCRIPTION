@@ -13,4 +13,5 @@ URL: https://github.com/BMumphrey/TSE
 BugReports: https://github.com/BMumphrey/TSE/issues
 Imports:
     dplyr,
-    reshape2
+    reshape2,
+    lubridate
