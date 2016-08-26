@@ -40,7 +40,8 @@ read_tse_boxes <- function(filename, n_boxes) {
 
 ##Read TSE data from a formatted TSE file
 ##Returns a data table adhering to tidy data principles
-read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19, na.rm = TRUE) {
+read_tse_data <- function(filename, n_boxes, lights_on = 7,
+                          lights_off = 19, na.rm = TRUE, add_factors = FALSE) {
 
   ##read in raw TSE data
   ##TSE reports null values as "-"
@@ -100,6 +101,14 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7, lights_off = 19, na.
   tse_data <- tse_data[, c(2, 3, 5, 4, 6, 7)]
   names(tse_data) <- c("Box", "Parameter", "Time", "Value", "Lights", "Day")
   tse_data <- arrange(tse_data, Box, Parameter, Time)
+
+  ##If requested, add factors based on optional box text fields
+  if (add_factors[[1]] != FALSE) {
+    fields <- append("Box", add_factors)
+    merge(tse_data, tse_boxes[, fields], by = "Box")
+  } else {
+    tse_data
+  }
 }
 
 ##Returns time since lights on in seconds
