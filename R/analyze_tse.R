@@ -38,16 +38,24 @@ dark_average <- function(tse_data, parameter) {
 ##Creates a wide format table interleaving the light, dark, and
 ##daily data for a given parameter
 ##This is the preferred format for reading data in excel by my PI
-interleave_averages <- function(light_data, dark_data, daily_data, trim = TRUE) {
-  ##If necessary, trim final day from light and daily data
-  ##so it matches dark data length
-  ##This imbalance occurs because runs are ended during the light period
-  ##of the final day, and therefore no dark period takes place
-  if (trim == TRUE) {
-    if (length(light_data) > length(dark_data)) {
-      light_data <- light_data[, 1:length(light_data) - 1]
-      daily_data <- daily_data[, 1:length(daily_data) - 1]
+interleave_averages <- function(light_data, dark_data, daily_data, range = "All") {
+  if (range[[1]] == "All") {
+    if (length(light_data) != length(dark_data)
+        | length(light_data) != length(daily_data)) {
+      stop("Data frames are not the same size")
     }
+  } else {
+    if (class(range) != "integer") {
+      stop("Not an integer range")
+    }
+    if (length(range) > length(light_data)
+        | length(range) > length(dark_data)
+        | length(range) > length(daily_data)) {
+      stop("Range too large")
+    }
+    light_data <- light_data[range]
+    dark_data <- dark_data[range]
+    daily_data <- daily_data[range]
   }
 
   ##Add prefixes to titles so that they are easily recognizable
