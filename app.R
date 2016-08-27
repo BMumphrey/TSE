@@ -13,6 +13,11 @@ ui <- fluidPage(
               label = "Parameter",
               choices = as.character(unique(tse_data$Parameter))),
   checkboxInput(inputId = "grouped", label = "Grouped", value = TRUE),
+  selectInput(inputId = "groups",
+                     label = "Group by:",
+                     choices = c("Text1",
+                                 "Text2",
+                                 "Text3")),
   plotOutput("plot"),
   tableOutput("boxes")
 )
@@ -20,7 +25,8 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$plot <- renderPlot(plot_tse_line(tse_data,
                                           input$parameter,
-                                          grouped = input$grouped))
+                                          grouped = input$grouped,
+                                          group = input$groups))
   output$boxes <- renderTable(boxes)
 }
 
