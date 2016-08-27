@@ -5,8 +5,8 @@ library(lubridate)
 library(reshape2)
 
 ##Test data set until uploading is implemented
-boxes <- read_tse_boxes("../data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
-tse_data <- read_tse_data("../data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
+boxes <- read_tse_boxes("data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
+tse_data <- read_tse_data("data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
 
 ui <- fluidPage(
   tableOutput("boxes"),
