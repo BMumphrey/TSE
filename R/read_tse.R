@@ -41,7 +41,7 @@ read_tse_boxes <- function(filename, n_boxes) {
 ##Read TSE data from a formatted TSE file
 ##Returns a data table adhering to tidy data principles
 read_tse_data <- function(filename, n_boxes, lights_on = 7,
-                          lights_off = 19, na.rm = TRUE, add_factors = FALSE) {
+                          lights_off = 19, na.rm = TRUE, add_factors = TRUE) {
 
   ##read in raw TSE data
   ##TSE reports null values as "-"
@@ -104,7 +104,7 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7,
 
   ##If requested, add factors based on optional box text fields
   if (add_factors[[1]] != FALSE) {
-    fields <- append("Box", add_factors)
+    fields <- append("Box", c("Text1", "Text2", "Text3"))
     merge(tse_data, tse_boxes[, fields], by = "Box")
   } else {
     tse_data
