@@ -15,4 +15,5 @@ Imports:
     dplyr,
     reshape2,
     lubridate,
-    shiny
+    shiny,
+    ggplot2
