@@ -3,16 +3,21 @@
 plot_tse_line <- function(tse_data, parameter,
                           grouped = TRUE,
                           group = "Text1",
-                          day_range = "all") {
+                          day_range = "all",
+                          boxes = "all") {
 
   if (day_range[[1]] == "all") {
     day_range = min(tse_data$Day):max(tse_data$Day)
   }
 
+  if (boxes[[1]] == "all") {
+    boxes <- unique(tse_data$Box)
+  }
 
   #Subset data based on user inputs
   sub_data <- tse_data[tse_data$Parameter == parameter
-                       & tse_data$Day %in% day_range,]
+                       & tse_data$Day %in% day_range
+                       & tse_data$Box %in% boxes,]
 
   ##Average data at each time point within each group
   ##unless otherwise specified
