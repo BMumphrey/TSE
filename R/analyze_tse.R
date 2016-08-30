@@ -45,7 +45,7 @@ interleave_averages <- function(light_data, dark_data, daily_data, range = "All"
       stop("Data frames are not the same size")
     }
   } else {
-    if (class(range) != "integer") {
+    if (class(range) != "integer" & class(range) != "numeric") {
       stop("Not an integer range")
     }
     if (length(range) > length(light_data)
