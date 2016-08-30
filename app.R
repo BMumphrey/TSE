@@ -67,14 +67,8 @@ ui <- fluidPage(
                         label = "Update time range")
     )
   ),
-  fluidRow(
-    plotOutput("plot")
-  ),
-
-  ##User supplied information for each box
-  fluidRow(
-    tableOutput("boxes")
-  )
+  fluidRow(plotOutput("plot")),
+  fluidRow(tableOutput("boxes"))
 )
 
 server <- function(input, output) {
