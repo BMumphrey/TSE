@@ -1,36 +1,28 @@
-##Returns the 24hr average for a given parameter for all boxes
-##in a given tide tse_data frame.
-##Returns a data frame in wide format
-daily_average <- function(tse_data, parameter) {
+##Returns period data for a given parameter
+##Sum for activity, max - min for drink and feed,
+##and average for all other parameters
+period_data <- function(tse_data, parameter, period) {
+  param_subset <- subset(tse_data, Parameter == parameter & Lights %in% period)
 
-  param_subset <- subset(tse_data, Parameter == parameter)
-  param_subset <- aggregate(param_subset$Value,
-                            list(Box = param_subset$Box, Day = param_subset$Day),
-                            FUN = mean)
-  ##Cast into wide format
-  dcast(param_subset, Box ~ Day, value.var = "x")
-}
+  ## Locomotor activity is summed over the period
+  if (parameter %in% c("XA", "XF", "X", "YA", "YF", "YT", "Z", "XT+YT")) {
+    param_subset <- aggregate(param_subset$Value,
+                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              FUN = sum)
+  }
+  ## Drink and feed are cumulative, so take the min/max diff over the period
+  else if (parameter %in% c("Drink", "Feed")) {
+    param_subset <- aggregate(param_subset$Value,
+                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              FUN = function(x) {max(x) - min(x)})
+  }
+  ## All other parameters are averaged over the period
+  else {
+    param_subset <- aggregate(param_subset$Value,
+                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              FUN = mean)
+  }
 
-##Returns the light period average for a given parameter for all boxes
-##in a given tide tse_data frame.
-##Returns a data frame in wide format
-light_average <- function(tse_data, parameter) {
-  param_subset <- subset(tse_data, Parameter == parameter & Lights == "Light")
-  param_subset <- aggregate(param_subset$Value,
-                            list(Box = param_subset$Box, Day = param_subset$Day),
-                            FUN = mean)
-  ##Cast into wide format
-  dcast(param_subset, Box ~ Day, value.var = "x")
-}
-
-##Returns the dark period average for a given parameter for all boxes
-##in a given tide tse_data frame.
-##Returns a data frame in wide format
-dark_average <- function(tse_data, parameter) {
-  param_subset <- subset(tse_data, Parameter == parameter & Lights == "Dark")
-  param_subset <- aggregate(param_subset$Value,
-                            list(Box = param_subset$Box, Day = param_subset$Day),
-                            FUN = mean)
   ##Cast into wide format
   dcast(param_subset, Box ~ Day, value.var = "x")
 }
@@ -38,7 +30,11 @@ dark_average <- function(tse_data, parameter) {
 ##Creates a wide format table interleaving the light, dark, and
 ##daily data for a given parameter
 ##This is the preferred format for reading data in excel by my PI
-interleave_averages <- function(light_data, dark_data, daily_data, range = "All") {
+interleave_periods <- function(tse_data, parameter, range = "All") {
+  light_data <- period_data(tse_data, parameter, "Light")
+  dark_data <- period_data(tse_data, parameter, "Dark")
+  daily_data <- period_data(tse_data, parameter, c("Light", "Dark"))
+
   if (range[[1]] == "All") {
     if (length(light_data) != length(dark_data)
         | length(light_data) != length(daily_data)) {
