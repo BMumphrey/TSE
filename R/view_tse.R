@@ -45,7 +45,7 @@ plot_tse_bar <- function(tse_data, parameter, period,
                        & tse_data$Time %in% time_range, ]
 
   ##Get period data
-  period_data <- get_period_data(tse_data, parameter, period, factors = TRUE)
+  period_data <- get_period_data(sub_data, parameter, period, factors = TRUE)
 
   ##Aggregate on requested factor
   aggregated_data <- aggregate(period_data$x, by = list(period_data[[group]]),

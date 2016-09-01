@@ -46,8 +46,7 @@ ui <- fluidPage(
            selectInput(inputId = "groups",
                        label = "Group by:",
                        choices = c("Text1",
-                                   "Text2",
-                                   "Text3")),
+                                   "Text2")),
            ##Checkbox to choose whether or not to group the data
            checkboxInput(inputId = "grouped", label = "Grouped", value = TRUE)
     ),
@@ -67,7 +66,10 @@ ui <- fluidPage(
                         label = "Update time range")
     )
   ),
-  fluidRow(plotOutput("plot")),
+  fluidRow(
+    column(9, plotOutput("plot_line")),
+    column(3, plotOutput("plot_bar"))
+    ),
   fluidRow(tableOutput("boxes"))
 )
 
@@ -80,12 +82,22 @@ server <- function(input, output) {
     ymd_hms(input$end)
   })
 
-  output$plot <- renderPlot(plot_tse_line(tse_data,
-                                          input$parameter,
-                                          grouped = input$grouped,
-                                          group = input$groups,
-                                          boxes = input$boxes,
-                                          time_range = start():end()))
+  output$plot_line <- renderPlot(plot_tse_line(tse_data,
+                                               input$parameter,
+                                               grouped = input$grouped,
+                                               group = input$groups,
+                                               boxes = input$boxes,
+                                               time_range = start():end()))
+
+  output$plot_bar <- renderPlot(plot_tse_bar(tse_data,
+                                             input$parameter,
+                                             period = c("Light", "Dark"),
+                                             grouped = input$grouped,
+                                             group = input$groups,
+                                             boxes = input$boxes,
+                                             time_range = start():end()))
+
+
   output$boxes <- renderTable(boxes)
 }
 

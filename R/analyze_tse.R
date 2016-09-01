@@ -8,8 +8,7 @@ get_period_data <- function(tse_data, parameter, period,
   ##Generate list of factors to include in aggregate function
   if (factors == TRUE) {
     aggregate_by <- list(Box = param_subset$Box, Day = param_subset$Day,
-                         Text1 = param_subset$Text1, Text2 = param_subset$Text2,
-                         Text3 = param_subset$Text3)
+                         Text1 = param_subset$Text1, Text2 = param_subset$Text2)
   }
   else {
     aggregate_by <- list(Box = param_subset$Box, Day = param_subset$Day)
