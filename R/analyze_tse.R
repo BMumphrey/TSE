@@ -1,25 +1,36 @@
 ##Returns period data for a given parameter
 ##Sum for activity, max - min for drink and feed,
 ##and average for all other parameters
-get_period_data <- function(tse_data, parameter, period, wide = FALSE) {
+get_period_data <- function(tse_data, parameter, period,
+                            wide = FALSE, factors = FALSE) {
   param_subset <- subset(tse_data, Parameter == parameter & Lights %in% period)
+
+  ##Generate list of factors to include in aggregate function
+  if (factors == TRUE) {
+    aggregate_by <- list(Box = param_subset$Box, Day = param_subset$Day,
+                         Text1 = param_subset$Text1, Text2 = param_subset$Text2,
+                         Text3 = param_subset$Text3)
+  }
+  else {
+    aggregate_by <- list(Box = param_subset$Box, Day = param_subset$Day)
+  }
 
   ## Locomotor activity is summed over the period
   if (parameter %in% c("XA", "XF", "X", "YA", "YF", "YT", "Z", "XT+YT")) {
     param_subset <- aggregate(param_subset$Value,
-                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              aggregate_by,
                               FUN = sum)
   }
   ## Drink and feed are cumulative, so take the min/max diff over the period
   else if (parameter %in% c("Drink", "Feed")) {
     param_subset <- aggregate(param_subset$Value,
-                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              aggregate_by,
                               FUN = function(x) {max(x) - min(x)})
   }
   ## All other parameters are averaged over the period
   else {
     param_subset <- aggregate(param_subset$Value,
-                              list(Box = param_subset$Box, Day = param_subset$Day),
+                              aggregate_by,
                               FUN = mean)
   }
 
