@@ -1,7 +1,7 @@
 ##Returns period data for a given parameter
 ##Sum for activity, max - min for drink and feed,
 ##and average for all other parameters
-period_data <- function(tse_data, parameter, period, wide = FALSE) {
+get_period_data <- function(tse_data, parameter, period, wide = FALSE) {
   param_subset <- subset(tse_data, Parameter == parameter & Lights %in% period)
 
   ## Locomotor activity is summed over the period
@@ -34,9 +34,9 @@ period_data <- function(tse_data, parameter, period, wide = FALSE) {
 ##daily data for a given parameter
 ##This is the preferred format for reading data in excel by my PI
 interleave_periods <- function(tse_data, parameter, range = "All") {
-  light_data <- period_data(tse_data, parameter, "Light", wide = TRUE)
-  dark_data <- period_data(tse_data, parameter, "Dark", wide = TRUE)
-  daily_data <- period_data(tse_data, parameter, c("Light", "Dark"), wide = TRUE)
+  light_data <- get_period_data(tse_data, parameter, "Light", wide = TRUE)
+  dark_data <- get_period_data(tse_data, parameter, "Dark", wide = TRUE)
+  daily_data <- get_period_data(tse_data, parameter, c("Light", "Dark"), wide = TRUE)
 
   if (range[[1]] == "All") {
     if (length(light_data) != length(dark_data)
