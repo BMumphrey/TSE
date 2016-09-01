@@ -37,6 +37,7 @@ plot_tse_bar <- function(tse_data, parameter, period,
                          day_range = unique(tse_data$Day),
                          boxes = unique(tse_data$Box),
                          time_range = min(tse_data$Time):max(tse_data$Time)) {
+
   ##Subset data based on user inputs
   sub_data <- tse_data[tse_data$Parameter == parameter
                        & tse_data$Day %in% day_range
@@ -47,7 +48,7 @@ plot_tse_bar <- function(tse_data, parameter, period,
   period_data <- get_period_data(tse_data, parameter, period, factors = TRUE)
 
   ##Aggregate on requested factor
-  aggregated_data <- aggregate(period_data$x, by = list(period_data$Text2),
+  aggregated_data <- aggregate(period_data$x, by = list(period_data[[group]]),
                                FUN = function (x) {c(Mean = mean(x), SD = sd(x), N = length(x))})
   ##Flatten data frame
   aggregated_data <- do.call(data.frame, aggregated_data)
