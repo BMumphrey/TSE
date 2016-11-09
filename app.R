@@ -8,8 +8,8 @@ source("R/read_tse.R")
 source("R/analyze_tse.R")
 
 ##Test data set until uploading is implemented
-boxes <- read_tse_boxes("data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
-tse_data <- read_tse_data("data/berthoud_female_cohort1_RYGB_40215 low temp.csv", 24)
+boxes <- read_tse_boxes("data/PoO TSE run 10 3 16.csv", 24)
+tse_data <- read_tse_data("data/PoO TSE run 10 3 16.csv", 24)
 
 ui <- fluidPage(
   ## custom CSS for 4 column layout (used below for Boxes options)
@@ -46,7 +46,8 @@ ui <- fluidPage(
            selectInput(inputId = "groups",
                        label = "Group by:",
                        choices = c("Text1",
-                                   "Text2")),
+                                   "Text2",
+                                   "Text3")),
            ##Checkbox to choose whether or not to group the data
            checkboxInput(inputId = "grouped", label = "Grouped", value = TRUE)
     ),
