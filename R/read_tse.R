@@ -44,7 +44,7 @@ read_tse_data <- function(filename, n_boxes, lights_on = 7,
                           lights_off = 19, na.rm = TRUE, add_factors = TRUE) {
 
   ##read in raw TSE data
-  ##TSE reports null values as "-"
+  ##The TSE system reports null values as "-"
   tse_data <- read.csv(filename, skip = 3 + n_boxes, na.strings = "-")
 
   #Convert data frame to a tidy data format

@@ -43,7 +43,7 @@ get_period_data <- function(tse_data, parameter, period,
 ##Creates a wide format table interleaving the light, dark, and
 ##daily data for a given parameter
 ##This is the preferred format for reading data in excel by my PI
-interleave_periods <- function(tse_data, parameter, range = "All") {
+interleave_periods <- function(tse_data, parameter, range = "All", box_data = NULL) {
   light_data <- get_period_data(tse_data, parameter, "Light", wide = TRUE)
   dark_data <- get_period_data(tse_data, parameter, "Dark", wide = TRUE)
   daily_data <- get_period_data(tse_data, parameter, c("Light", "Dark"), wide = TRUE)
@@ -76,5 +76,15 @@ interleave_periods <- function(tse_data, parameter, range = "All") {
   ##Bind all three data frames and re-order with interleaving
   bound_data <- cbind(light_data, dark_data, daily_data)
   s <- rep(1:length(light_data), each = 3) + (0:2) * length(light_data)
-  bound_data[s]
+  bound_data <- bound_data[s]
+
+  ##If box data is provided, add meta data to first three columns
+  if (!(is.null(box_data))) {
+    bound_data <- cbind(box_data[1:length(bound_data[[1]]), 4:6], bound_data)
+  }
+
+  ##Append parameter name as first column, and fixes column name
+  bound_data <- cbind(rep(parameter, length(bound_data[[1]])), bound_data)
+  colnames(bound_data)[1] <- "Parameter"
+  bound_data
 }
